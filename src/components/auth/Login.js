@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import classnames from 'classnames';
+import { loginUser } from '../../actions/authActions';
 
 class Login extends Component {
 	constructor() {
@@ -13,6 +17,16 @@ class Login extends Component {
 		this.onSubmit = this.onSubmit.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.auth.isAuthenticated) {
+			this.props.history.push('/dashboard');
+		}
+
+		if (nextProps.errors) {
+			this.setState({ errors: nextProps.errors });
+		}
+	}
+
 	onChange(e) {
 		this.setState({ [e.target.name]: e.target.value });
 	}
@@ -20,14 +34,16 @@ class Login extends Component {
 	onSubmit(e) {
 		e.preventDefault();
 
-		const newUser = {
+		const userData = {
 			email: this.state.email,
 			password: this.state.password
 		};
-		console.log(newUser);
+		this.props.loginUser(userData);
 	}
 
 	render() {
+		const { errors } = this.state;
+
 		return (
 			<div className="register">
 				<div className="container">
@@ -45,8 +61,11 @@ class Login extends Component {
 										name="email"
 										value={this.state.email}
 										onChange={this.onChange}
-										className="form-control from-control-lg"
+										className={classnames('form-control form-control-lg', {
+											'is-invalid': errors.email
+										})}
 									/>
+									{errors.email && <div className="invalid-feedback">{errors.email}</div>}
 								</div>
 								<div className="form-group">
 									<input
@@ -55,10 +74,17 @@ class Login extends Component {
 										name="password"
 										value={this.state.password}
 										onChange={this.onChange}
-										className="form-control from-control-lg"
+										className={classnames('form-control form-control-lg', {
+											'is-invalid': errors.password
+										})}
 									/>
+									{errors.password && <div className="invalid-feedback">{errors.password}</div>}
 								</div>
-								<input type="submit" value="Hau weg die Scheiße!" className="btn btn-light btn-block mt-4" />
+								<input
+									type="submit"
+									value="Hau weg die Scheiße!"
+									className="btn btn-light btn-block mt-4"
+								/>
 							</form>
 						</div>
 					</div>
@@ -68,4 +94,15 @@ class Login extends Component {
 	}
 }
 
-export default Login;
+Login.propTypes = {
+	loginUser: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired,
+	errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+	auth: state.auth,
+	errors: state.errors
+});
+
+export default connect(mapStateToProps, { loginUser })(Login);
