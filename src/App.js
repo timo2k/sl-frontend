@@ -1,15 +1,28 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import Landing from './components/layout/Landing';
+import Register from './components/auth/Register';
+import Login from './components/auth/Login';
+
 import './App.scss';
 
 class App extends Component {
 	render() {
 		return (
-			<div className="App">
-				<div className="App-infobox p-3">
-					<h1 className="text-center">Stuhlgang-Manager</h1>
-					<p className="lead text-center">Wir kümmern uns um Ihre Scheisse</p>
+			<Router>
+				<div className="App">
+					<Navbar />
+					<Route exact path="/" component={Landing} />
+					<div className="container">
+						<Route exact path="/register" component={Register} />
+						<Route exact path="/Login" component={Login} />
+					</div>
+					<Footer />
 				</div>
-			</div>
+			</Router>
 		);
 	}
 }
