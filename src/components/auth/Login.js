@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import { loginUser } from '../../actions/authActions';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 class Login extends Component {
 	constructor() {
@@ -15,6 +15,12 @@ class Login extends Component {
 
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.props.auth.isAuthenticated) {
+			this.props.history.push('/dashboard');
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -54,32 +60,22 @@ class Login extends Component {
 								Gib deine Benutzerdaten in die unten stehenden Felder ein um dich einzuloggen
 							</p>
 							<form onSubmit={this.onSubmit}>
-								<div className="form-group">
-									<input
-										type="text"
-										placeholder="Gültige E-Mail Adresse"
-										name="email"
-										value={this.state.email}
-										onChange={this.onChange}
-										className={classnames('form-control form-control-lg', {
-											'is-invalid': errors.email
-										})}
-									/>
-									{errors.email && <div className="invalid-feedback">{errors.email}</div>}
-								</div>
-								<div className="form-group">
-									<input
-										type="password"
-										placeholder="Passwort"
-										name="password"
-										value={this.state.password}
-										onChange={this.onChange}
-										className={classnames('form-control form-control-lg', {
-											'is-invalid': errors.password
-										})}
-									/>
-									{errors.password && <div className="invalid-feedback">{errors.password}</div>}
-								</div>
+								<TextFieldGroup
+									placeholder="Email Adresse"
+									name="email"
+									type="text"
+									value={this.state.email}
+									onChange={this.onChange}
+									error={errors.email}
+								/>
+								<TextFieldGroup
+									placeholder="Passwort"
+									name="password"
+									type="password"
+									value={this.state.password}
+									onChange={this.onChange}
+									error={errors.password}
+								/>
 								<input
 									type="submit"
 									value="Hau weg die Scheiße!"
