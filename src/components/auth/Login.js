@@ -79,7 +79,7 @@ class Login extends Component {
 								<input
 									type="submit"
 									value="Hau weg die Scheiße!"
-									className="btn btn-light btn-block mt-4"
+									className="btn btn-primary btn-block mt-4"
 								/>
 							</form>
 						</div>

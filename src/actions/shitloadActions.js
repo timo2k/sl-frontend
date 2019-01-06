@@ -4,7 +4,7 @@ import { GET_ERRORS, GET_SHITLOADS, SHITLOADS_LOADING } from './types';
 // Create Shitload
 export const createShitload = (shitloadData, history) => (dispatch) => {
 	axios
-		.post('http://localhost:5000/api/v1/shitload', shitloadData)
+		.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/shitload`, shitloadData)
 		.then((res) => history.push('/dashboard'))
 		.catch((err) =>
 			dispatch({
@@ -18,7 +18,7 @@ export const createShitload = (shitloadData, history) => (dispatch) => {
 export const getShitloads = () => (dispatch) => {
 	dispatch(setShitloadLoading());
 	axios
-		.get('http://localhost:5000/api/v1/shitload')
+		.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/shitload`)
 		.then((res) =>
 			dispatch({
 				type: GET_SHITLOADS,
