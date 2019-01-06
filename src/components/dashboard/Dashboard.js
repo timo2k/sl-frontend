@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { getCurrentProfile } from '../../actions/profileActions';
 import { Link } from 'react-router-dom';
 import { getShitloads } from '../../actions/shitloadActions';
+import Moment from 'react-moment';
 
 class Dashboard extends Component {
 	componentDidMount() {
@@ -12,27 +13,59 @@ class Dashboard extends Component {
 	}
 
 	render() {
-		//const { user } = this.props.auth;
 		const { profile, loading } = this.props.profile;
+		const shitloads = this.props.shitloads.shitloads;
+		const shitloading = this.props.shitloads.loading;
 
 		let dashboardContent;
+		let shitloadContent;
 
 		if (profile === null || loading) {
 			dashboardContent = <h4>Loading...</h4>;
 		} else {
+			// Checks the Shitload Data
+			if (shitloads === null || shitloading) {
+				shitloadContent = <h4>Loading...</h4>;
+			} else if (Object.keys(shitloads).length > 0) {
+				shitloadContent = shitloads.map((shitload) => (
+					<tr key={shitload._id}>
+						<td>
+							<Moment format="D MMM YYYY - HH:MM">{shitload.createdAt}</Moment>
+						</td>
+						<td>{shitload.consistency}</td>
+						<td>{shitload.toilettype}</td>
+						<td>{shitload.location}</td>
+					</tr>
+				));
+			}
+
 			// Check if logged in user has profile data
 			if (Object.keys(profile).length > 0) {
 				dashboardContent = (
 					<div>
-						<div className="card rounded-0 border shadow-sm mt-5">
-							<div className="card-body">
-								<p className="lead text-muted">Lege einen Stuhlgang an</p>
-								<Link to="/create-shitload" className="btn btn-lg btn-primary">
-									Stuhlgang anlegen
-								</Link>
+						<div className="row">
+							<div className="col-6">
+								<div className="card rounded-0 border shadow-sm mt-4">
+									<div className="card-body">
+										<p className="lead text-muted">Lege einen Stuhlgang an</p>
+										<Link to="/create-shitload" className="btn btn-lg btn-primary">
+											Stuhlgang anlegen
+										</Link>
+									</div>
+								</div>
+							</div>
+							<div className="col-6">
+								<div className="card rounded-0 border shadow-sm mt-4">
+									<div className="card-body">
+										<p className="lead text-muted">Bearbeite dein Profil</p>
+										<Link to="/handle/edit" className="btn btn-lg btn-primary">
+											Profil bearbeiten
+										</Link>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div className="card rounded-0 border shadow-sm mt-5">
+						<div className="card rounded-0 border shadow-sm mt-4">
 							<div className="card-body">
 								<p className="lead text-muted">
 									Hier hast du eine Übersicht über deine letzten Stuhlgänge
@@ -46,14 +79,7 @@ class Dashboard extends Component {
 											<th scope="col">Ort</th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr>
-											<td>Hier</td>
-											<td>Hier</td>
-											<td>Hier</td>
-											<td>Hier</td>
-										</tr>
-									</tbody>
+									<tbody>{shitloadContent}</tbody>
 								</table>
 							</div>
 						</div>
