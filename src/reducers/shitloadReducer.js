@@ -11,7 +11,7 @@ export default function(state = initialState, action) {
 			return {
 				...state,
 				shitloads: action.payload,
-				lodaing: false
+				loading: false
 			};
 		case SHITLOADS_LOADING:
 			return {
